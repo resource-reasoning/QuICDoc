@@ -1,0 +1,73 @@
+<html>
+        <head>
+                <title>Test</title>
+                <script type="text/javascript">
+                        var myId = -1;
+                        var docbox;
+                        var oldStr = ""
+                        var t; // This will be the timer that runs the return update thingie.
+                        var login = function() {
+                                var loginbutton = document.getElementById("login");
+                                loginbutton.setAttribute("style","display:none");
+                                docbox = document.getElementById("docBox");
+
+                                var rq = XMLHttpRequest();
+                                rq.onreadystatechange = function() {
+                                        if (rq.readyState === 4 && rq.status===200) {
+                                                var res = JSON.parse(rq.responseText);
+                                                docbox.value = res[0];
+                                                oldStr = res[0];
+                                                myId = res[1];
+                                                document.getElementById("username").appendChild(document.createTextNode("You are user number: "+myId));
+                                                docbox.setAttribute("style","display:true"); // GDSGDS Figure out what this /should/ be.
+                                                t = setTimeout("getData()",3000);
+                                        } 
+                                }
+                                rq.open("GET","http://localhost:4242/getDoc");
+                                rq.send();
+
+                        }
+
+                        var updateServer = function() {
+                                var rq = XMLHttpRequest();
+                                var newStr = docbox.value;
+                                // Now we can handle lists of diffs! if(Math.abs(newStr.length - oldStr.length)!==1) alert("Please don't do that.");
+                                rq.onreadystatechange = function() {
+                                        if (rq.readyState === 4 && rq.status===200) {
+                                                if(rq.responseText!=="OK") alert("Concurrency Error!");
+                                                oldStr = newStr;
+                                        } 
+                                }
+                                var df = { uid:myId , diffs:makeDiffList(oldStr,newStr)} ;
+                                rq.open("GET","http://localhost:4242/putDiff?"+escape(JSON.stringify(df)));
+                                rq.send();
+                        }
+
+                        var getData = function() {
+                                var rq = XMLHttpRequest();
+                                rq.onreadystatechange = function() {
+                                        if (rq.readyState === 4 && rq.status===200) {
+                                                var diffs = JSON.parse(rq.responseText);
+                                                for(var i = 0 ; i< diffs.length ; i++) {
+                                                        oldStr = applyDiff(oldStr,diffs[i]);
+                                                }
+                                                docbox.value = oldStr;
+                                        }
+                                }
+                                rq.open("GET", "http://localhost:4242/getDiff?"+myId);
+                                rq.send();
+                                t = setTimeout("getData()",1000);
+                        }
+                </script>
+                <script type="text/javascript" src="http://localhost:4242/diffLib.js">
+                        alert("Never happens");
+                </script>
+        </head>
+        <body>
+                <div><p id="username" /></div>
+                <a onclick="login()" id="login">Log in</a>
+                <p />
+                <textarea id="docBox" cols="80" rows="30" style="display:none" oninput="updateServer()">
+                </textarea>
+        </body>
+</html>

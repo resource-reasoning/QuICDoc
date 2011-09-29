@@ -1,0 +1,6 @@
+This is a small, simple, collaborative, concurrent, distributed text editor in
+your web browser.
+
+To run the server, first edit "client.hs" and replace the "localhost" urls in
+there with the address of your server. Then run "node ./server.js". Point your
+browser at port 4242 of the server, and you're running.
