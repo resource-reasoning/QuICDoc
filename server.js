@@ -24,7 +24,7 @@ var handleReq = function(req, res) {
         } else if(df = req.url.match(/^\/getDiff\?(.*)/)) {
                 var uid = unescape(df[1]);
                 var mydiffs = changeLog[uid];
-                res.writeHead(200, {'Content-Type': 'text/plain'});
+                res.writeHead(200, {'Content-Type': 'text/json'});
                 res.end(JSON.stringify(mydiffs));
                 changeLog[uid] = [];
         } else if(df = req.url.match(/^\/putDiff\?(.*)/)) {
@@ -64,5 +64,3 @@ var applyConcurrentDiff = function(df) {
 }
 
 http.createServer(handleReq).listen(4242,"127.0.0.1")
-
-
