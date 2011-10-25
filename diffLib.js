@@ -12,7 +12,7 @@ var makeDiffList = function(oldStr, newStr) {
         // i := the number of equal chars at the beginning of the strings
         for(var i = 0 ; i< oldStr.length && i< newStr.length && oldStr[i]===newStr[i] ; i++) {}
         // j := the number of equal chars at the end of the strings
-        for(var j = 0 ; j< oldStr.length && j< newStr.length && oldStr[oldStr.length-j-1]===newStr[newStr.length-j-1] ; j++) {}
+        for(var j = 0 ; j< oldStr.length - i && j< newStr.length - i && oldStr[oldStr.length-j-1]===newStr[newStr.length-j-1] ; j++) {}
         if(i+j!==oldStr.length) {
                 // Some stuff was deleted from oldStr
                 res.push({type:"delete",point:i,length:(oldStr.length-i-j)});
