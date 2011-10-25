@@ -20,6 +20,7 @@ var handleReq = function(req, res) {
         } else if(req.url.match(/^\/getDoc/)) {
                 res.writeHead(200, {'Content-Type': 'text/json'});
                 res.end(JSON.stringify([doc,++lastUser]));
+                changeLog[lastUser] = [];
         } else if(df = req.url.match(/^\/getDiff\?(.*)/)) {
                 var uid = unescape(df[1]);
                 var mydiffs = changeLog[uid];
