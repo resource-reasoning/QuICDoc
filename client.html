@@ -47,7 +47,9 @@
                                 var rq = XMLHttpRequest();
                                 rq.onreadystatechange = function() {
                                         if (rq.readyState === 4 && rq.status===200) {
-                                                var diffs = JSON.parse(rq.responseText);
+                                                var newStr = docbox.value;
+                                                var mydiffs = makeDiffList(oldStr, newStr);
+                                                var servdiffs = JSON.parse(rq.responseText);
                                                 for(var i = 0 ; i< diffs.length ; i++) {
                                                         oldStr = applyDiff(oldStr,diffs[i]);
                                                 }
