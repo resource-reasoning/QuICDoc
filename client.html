@@ -12,6 +12,9 @@
                                 docbox = document.getElementById("docBox");
 
                                 var rq = XMLHttpRequest();
+                                // It looks like we don't have to set the callback immediately. Just as soon as it's done before we return.
+                                rq.open("GET","http://localhost:4242/getDoc");
+                                rq.send();
                                 rq.onreadystatechange = function() {
                                         if (rq.readyState === 4 && rq.status===200) {
                                                 var res = JSON.parse(rq.responseText);
@@ -23,8 +26,6 @@
                                                 t = setTimeout("getData()",3000);
                                         } 
                                 }
-                                rq.open("GET","http://localhost:4242/getDoc");
-                                rq.send();
 
                         }
 
